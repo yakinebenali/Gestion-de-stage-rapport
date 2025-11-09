@@ -26,13 +26,14 @@ const storage = multer.diskStorage({
 const upload = multer({
     storage: storage,
     fileFilter: (req, file, cb) => {
-        if (file.mimetype === 'application/pdf') {
-            cb(null, true); // Accepter uniquement les fichiers PDF
+        console.log('Type MIME reçu:', file.mimetype, 'Nom du fichier:', file.originalname);
+        if (file.mimetype === 'application/pdf' || file.mimetype === 'application/octet-stream') {
+            cb(null, true);
         } else {
             cb(new Error('Seuls les fichiers PDF sont acceptés'), false);
         }
     },
-    limits: { fileSize: 5 * 1024 * 1024 } // Limite à 5 Mo
+    limits: { fileSize: 5 * 1024 * 1024 } // 5 MB
 });
 
 // Route pour ajouter un rapport avec un fichier PDF
