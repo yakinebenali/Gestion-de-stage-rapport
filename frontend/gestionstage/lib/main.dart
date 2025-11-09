@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gestionstage/ajoutRaport.dart';
+import 'package:gestionstage/consultRapport%20.dart';
 
 
 void main() {
@@ -58,11 +59,11 @@ class HomeScreen extends StatelessWidget {
             // Bouton Consulter Rapport
             ElevatedButton(
               onPressed: () {
-                // Placeholder pour la page de consultation
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(builder: (context) => const ConsultRapportScreen()),
-                // );
+              
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ConsultRapportScreen()),
+                );
               },
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),

@@ -22,5 +22,15 @@ const AjoutRapport = (req, res) => {
         });
     });
 };
+const getAllRapports = (req, res) => {
+    const query = 'SELECT * FROM Rapport';
+    connection.query(query, (err, results) => {
+        if (err) {
+            console.error('Erreur lors de la récupération des rapports:', err);
+            return res.status(500).json({ error: 'Erreur serveur lors de la récupération des rapports' });
+        }
+        res.status(200).json(results);
+    });
+};
 
-module.exports = { AjoutRapport };
+module.exports = { AjoutRapport, getAllRapports };
