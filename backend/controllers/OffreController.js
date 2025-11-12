@@ -24,15 +24,15 @@ const AjoutOffre = (req, res) => {
 };
 
 // Fonction pour récupérer toutes les offres
-const getAllOffres = (req, res) => {
-    const query = 'SELECT * FROM offres';
-    connection.query(query, (err, results) => {
-        if (err) {
-            console.error('Erreur lors de la récupération des offres:', err);
-            return res.status(500).json({ error: 'Erreur serveur lors de la récupération des offres' });
-        }
-        res.status(200).json(results);
-    });
+const getAllOffres = async (req, res) => {
+  try {
+    const [results] = await connection.query('SELECT * FROM offres');
+    res.status(200).json(results);
+  } catch (err) {
+    console.error('Erreur lors de la récupération des offres:', err);
+    res.status(500).json({ error: 'Erreur serveur lors de la récupération des offres' });
+  }
 };
+
 
 module.exports = { AjoutOffre, getAllOffres };
