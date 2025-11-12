@@ -7,7 +7,8 @@ const path = require('path');
 const app = express();
 const port = 3000;
 const { AjoutRapport, getAllRapports } = require('./controllers/RapportController');
-
+const{ AjoutOffre } = require('./controllers/OffreController');
+const { AjoutEntreprise } = require('./controllers/EntrepriseController');
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -50,7 +51,12 @@ app.use((err, req, res, next) => {
 app.post('/AjoutRapport', upload.single('pdf'), AjoutRapport);
 app.get('/Rapports', getAllRapports); // New endpoint for fetching reports
 app.use('/uploads', express.static('Uploads'));
+app.post('/ajouteroffre', AjoutOffre);
+app.post('/AjoutEntreprise',AjoutEntreprise);
 
 http.createServer(app).listen(port, '0.0.0.0', () => {
     console.log(`Serveur HTTP démarré sur le port ${port}`);
 });
+
+
+
