@@ -82,7 +82,7 @@ class HomeScreen extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => AddOffreScreen(entrepriseId: 1),
+                        builder: (context) =>  AjouterOffrePage(),
                       ),
                     );
                   },
