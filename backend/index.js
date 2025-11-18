@@ -49,7 +49,7 @@ app.use((err, req, res, next) => {
 
 // Routes
 app.post('/AjoutRapport', upload.single('pdf'), AjoutRapport);
-app.get('/Rapports', getAllRapports); // New endpoint for fetching reports
+app.get('/Rapports', getAllRapports);    // New endpoint for fetching reports
 app.use('/uploads', express.static('Uploads'));
 app.post('/ajouteroffre', AjoutOffre);
 app.post('/AjoutEntreprise',AjoutEntreprise);

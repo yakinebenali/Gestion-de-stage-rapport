@@ -22,15 +22,16 @@ const AjoutRapport = (req, res) => {
         });
     });
 };
-const getAllRapports = (req, res) => {
-    const query = 'SELECT * FROM Rapport';
-    connection.query(query, (err, results) => {
-        if (err) {
-            console.error('Erreur lors de la récupération des rapports:', err);
-            return res.status(500).json({ error: 'Erreur serveur lors de la récupération des rapports' });
-        }
+
+const getAllRapports = async (req, res) => {
+    try {
+        const [results] = await connection.query('SELECT * FROM Rapport');
         res.status(200).json(results);
-    });
+    } catch (err) {
+        console.error('Erreur lors de la récupération des rapports:', err);
+        res.status(500).json({ error: 'Erreur serveur lors de la récupération des rapports' });
+    }
 };
+
 
 module.exports = { AjoutRapport, getAllRapports };
