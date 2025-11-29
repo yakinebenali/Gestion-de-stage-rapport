@@ -60,6 +60,7 @@
       "rootUri": "file:///C:/src/flutter/flutter/packages/flutter",
       "packageUri": "lib/",
       "languageVersion": "3.7"
+      "languageVersion": "3.7"
     },
     {
       "name": "flutter_lints",
@@ -78,11 +79,13 @@
       "rootUri": "file:///C:/src/flutter/flutter/packages/flutter_test",
       "packageUri": "lib/",
       "languageVersion": "3.7"
+      "languageVersion": "3.7"
     },
     {
       "name": "flutter_web_plugins",
       "rootUri": "file:///C:/src/flutter/flutter/packages/flutter_web_plugins",
       "packageUri": "lib/",
+      "languageVersion": "3.7"
       "languageVersion": "3.7"
     },
     {
@@ -155,6 +158,7 @@
       "name": "sky_engine",
       "rootUri": "file:///C:/src/flutter/flutter/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",
+      "languageVersion": "3.7"
       "languageVersion": "3.7"
     },
     {
@@ -251,6 +255,7 @@
       "name": "vector_math",
       "rootUri": "file:///C:/Users/dell/AppData/Local/Pub/Cache/hosted/pub.dev/vector_math-2.1.4",
       "packageUri": "lib/",
+      "languageVersion": "2.14"
       "languageVersion": "2.14"
     },
     {

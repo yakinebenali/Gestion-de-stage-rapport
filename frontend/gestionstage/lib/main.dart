@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gestionstage/ajoutRaport.dart';
-import 'package:gestionstage/consultOffre.dart';
 import 'package:gestionstage/consultRapport.dart';
 import 'package:gestionstage/ajoutOffre.dart';
+import 'package:gestionstage/consult_candidature.dart';
+import 'package:gestionstage/consultOffre.dart';
 
 void main() {
   runApp(const MyApp());
@@ -82,9 +83,7 @@ class HomeScreen extends StatelessWidget {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                        builder: (context) =>  AjouterOffrePage(),
-                      ),
+                      MaterialPageRoute(builder: (context) => AjouterOffrePage()),
                     );
                   },
                   style: ElevatedButton.styleFrom(
@@ -93,19 +92,34 @@ class HomeScreen extends StatelessWidget {
                   child: const Text('Ajouter Offre', style: TextStyle(fontSize: 18)),
                 ),
                 const SizedBox(height: 40),
-                  ElevatedButton(
+
+                // Bouton Consulter Offre (avec postuler dans la page)
+                ElevatedButton(
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                        builder: (context) =>  OffresPage(),
-                      ),
+                      MaterialPageRoute(builder: (context) => OffresPage()),
                     );
                   },
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                   ),
                   child: const Text('Consulter Offre', style: TextStyle(fontSize: 18)),
+                ),
+                const SizedBox(height: 20),
+
+                // Bouton Consulter Candidatures
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const ConsultCandidatureScreen()),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                  ),
+                  child: const Text('Consulter Candidatures', style: TextStyle(fontSize: 18)),
                 ),
               ],
             ),
