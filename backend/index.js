@@ -6,7 +6,7 @@ const multer = require('multer');
 const path = require('path');
 const app = express();
 const port = 3000;
-const { AjoutRapport, getAllRapports } = require('./controllers/RapportController');
+const { AjoutRapport, getAllRapports ,deleteRapport} = require('./controllers/RapportController');
 const{ AjoutOffre,getAllOffres } = require('./controllers/OffreController');
 const { Postuler, getAllCandidatures } = require('./controllers/PostulerController');
 const { inscription } = require('./controllers/InscripitionController');
@@ -52,6 +52,7 @@ app.use((err, req, res, next) => {
 
 // Routes
 app.post('/AjoutRapport', upload.single('pdf'), AjoutRapport);
+app.delete('/rapports/:id', deleteRapport);
 app.get('/Rapports', getAllRapports);    // New endpoint for fetching reports
 app.use('/uploads', express.static('Uploads'));
 app.post('/ajouteroffre', AjoutOffre);

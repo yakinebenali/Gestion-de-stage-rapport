@@ -58,6 +58,47 @@ class _ConsultRapportScreenState extends State<ConsultRapportScreen> {
     }
   }
 
+  // Fonction pour supprimer un rapport avec confirmation
+  Future<void> _deleteRapport(int id) async {
+    bool confirm = await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Confirmation'),
+        content: const Text('Voulez-vous vraiment supprimer ce rapport ?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Annuler'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Supprimer'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm) {
+      try {
+        final response = await http.delete(Uri.parse('http://localhost:3000/Rapports/$id'));
+        if (response.statusCode == 200) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Rapport supprimé avec succès')),
+          );
+          _fetchRapports(); // Rafraîchir la liste
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Erreur suppression: ${response.statusCode}')),
+          );
+        }
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Erreur: $e')),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -106,12 +147,20 @@ class _ConsultRapportScreenState extends State<ConsultRapportScreen> {
                                   Text('Description: ${rapport['description']}'),
                               ],
                             ),
-                            trailing: rapport['pdf_path'] != null
-                                ? IconButton(
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                if (rapport['pdf_path'] != null)
+                                  IconButton(
                                     icon: const Icon(Icons.picture_as_pdf),
                                     onPressed: () => _openPdf(rapport['pdf_path']),
-                                  )
-                                : null,
+                                  ),
+                                IconButton(
+                                  icon: const Icon(Icons.delete, color: Colors.red),
+                                  onPressed: () => _deleteRapport(rapport['id']),
+                                ),
+                              ],
+                            ),
                           ),
                         );
                       },

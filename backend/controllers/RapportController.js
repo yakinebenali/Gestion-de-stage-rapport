@@ -51,5 +51,28 @@ const getAllRapports = async (req, res) => {
     }
 };
 
+const deleteRapport = async (req, res) => {
+  const rapportId = req.params.id;
 
-module.exports = { AjoutRapport, getAllRapports };
+  if (!rapportId) {
+    return res.status(400).json({ error: "ID du rapport manquant" });
+  }
+
+  try {
+    const [result] = await connection.query(
+      "DELETE FROM Rapport WHERE id = ?", // ⚠️ Corrigé ici
+      [rapportId]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "Rapport non trouvé" });
+    }
+
+    res.status(200).json({ message: "Rapport supprimé avec succès" });
+  } catch (err) {
+    console.error("Erreur suppression rapport :", err);
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+};
+
+module.exports = { AjoutRapport, getAllRapports,deleteRapport };
