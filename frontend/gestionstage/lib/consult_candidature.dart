@@ -17,7 +17,7 @@ class _ConsultCandidatureScreenState extends State<ConsultCandidatureScreen> {
   String? _errorMessage;
 
   // ⚠️ Remplacez par l'IP de votre PC
-  final String backendUrl = "http://192.168.1.10:3000";
+  final String backendUrl = "http://localhost:3000";
 
   @override
   void initState() {

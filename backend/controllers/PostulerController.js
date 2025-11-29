@@ -33,16 +33,19 @@ const Postuler = (req, res) => {
     });
 };
 
-// GET : Récupérer toutes les candidatures
-const getAllCandidatures = (req, res) => {
-    const query = `SELECT * FROM Candidature ORDER BY id DESC`;
-    connection.query(query, (err, results) => {
-        if (err) {
-            console.error('Erreur DB:', err);
-            return res.status(500).json({ error: 'Erreur DB' });
-        }
-        res.json(results);
-    });
+const getAllCandidatures = async (req, res) => {
+  try {
+    const [results] = await connection.query(`
+      SELECT * FROM Candidature ORDER BY id DESC
+    `);
+
+    res.json(results);
+
+  } catch (err) {
+    console.error("Erreur DB:", err);
+    res.status(500).json({ error: "Erreur DB" });
+  }
 };
+
 
 module.exports = { Postuler, getAllCandidatures };
