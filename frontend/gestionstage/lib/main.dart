@@ -83,7 +83,7 @@ class HomeScreen extends StatelessWidget {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => AjouterOffrePage()),
+                      MaterialPageRoute(builder: (context) => AjouterOffrePage(entrepriseId: 1),),
                     );
                   },
                   style: ElevatedButton.styleFrom(

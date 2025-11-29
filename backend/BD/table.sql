@@ -4,9 +4,11 @@ CREATE TABLE Rapport (
     company VARCHAR(255) NOT NULL,
     start_date DATE,
     end_date DATE,
-    description TEXT
+    description TEXT,
+    pdf_path VARCHAR(255),
+    filiere VARCHAR(255) NOT NULL
 );
-ALTER TABLE Rapport ADD COLUMN pdf_path VARCHAR(255);
+
 
 CREATE TABLE entreprises (
   id INT AUTO_INCREMENT PRIMARY KEY,
