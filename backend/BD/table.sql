@@ -39,3 +39,14 @@ CREATE TABLE Candidature (
     message TEXT,
     cv_path VARCHAR(255)
 );
+CREATE TABLE etudiants (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nom VARCHAR(100) NOT NULL,
+  prenom VARCHAR(100),
+  email VARCHAR(100) UNIQUE NOT NULL,
+  mot_de_passe VARCHAR(255) NOT NULL,
+  niveau VARCHAR(100),
+  specialite VARCHAR(100),
+  telephone VARCHAR(20),
+  date_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
