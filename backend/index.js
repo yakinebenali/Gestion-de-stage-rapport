@@ -47,28 +47,6 @@ app.use((err, req, res, next) => {
     }
     next();
 });
-// UPLOAD CV ()
-// ---------------------------
-const cvStorage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'Uploads/cv/');
-    },
-    filename: (req, file, cb) => {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, uniqueSuffix + path.extname(file.originalname));
-    }
-});
-
-const uploadCV = multer({
-    storage: cvStorage,
-    fileFilter: (req, file, cb) => {
-        if (file.mimetype === 'application/pdf') {
-            cb(null, true);
-        } else {
-            cb(new Error('Seuls les CV PDF sont acceptés'), false);
-        }
-    }
-});
 
 
 // Routes
@@ -78,7 +56,7 @@ app.use('/uploads', express.static('Uploads'));
 app.post('/ajouteroffre', AjoutOffre);
 app.post('/AjoutEntreprise',AjoutEntreprise);
 app.get('/getAllOffres',getAllOffres);
-app.post('/Postuler', uploadCV.single('cv'), Postuler);
+app.post('/Postuler', upload.single('pdf'), Postuler);
 app.get('/Candidatures', getAllCandidatures);
 
 http.createServer(app).listen(port, '0.0.0.0', () => {
