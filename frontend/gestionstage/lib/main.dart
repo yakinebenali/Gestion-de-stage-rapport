@@ -73,8 +73,7 @@ class HomeScreen extends StatelessWidget {
                     mainAxisSpacing: 16,
                     childAspectRatio: 1.1,
                     children: [
-                      buildButton(context, "Ajouter Rapport", Icons.note_add, AddRapportScreen()),
-                      buildButton(context, "Consulter Rapport", Icons.notes, ConsultRapportScreen()),
+                    
                       buildButton(context, "Ajouter Offre", Icons.add_business, AjouterOffrePage(entrepriseId: 1)),
                       buildButton(context, "Consulter Offre", Icons.business_center, OffresPage()),
                       buildButton(context, "Consulter Candidatures", Icons.how_to_reg, ConsultCandidatureScreen()),

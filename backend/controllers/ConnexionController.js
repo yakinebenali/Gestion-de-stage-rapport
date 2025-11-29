@@ -18,7 +18,6 @@ const Connexion = async (req, res) => {
 
     if (etudiant.length > 0) {
       const user = etudiant[0];
-
       const correct = await bcrypt.compare(mot_de_passe, user.mot_de_passe);
 
       if (!correct) {
@@ -27,8 +26,13 @@ const Connexion = async (req, res) => {
 
       return res.status(200).json({
         message: "Connexion réussie",
-        type: "etudiant",
-        user: user
+        role: "etudiant",       // ⚡ changer type → role
+        user: {
+          id: user.id,
+          nom: user.nom,
+          email: user.email,
+          prenom: user.prenom,
+        }
       });
     }
 
@@ -40,7 +44,6 @@ const Connexion = async (req, res) => {
 
     if (entreprise.length > 0) {
       const user = entreprise[0];
-
       const correct = await bcrypt.compare(mot_de_passe, user.mot_de_passe);
 
       if (!correct) {
@@ -49,8 +52,13 @@ const Connexion = async (req, res) => {
 
       return res.status(200).json({
         message: "Connexion réussie",
-        type: "entreprise",
-        user: user
+        role: "entreprise",      // ⚡ idem
+        user: {
+          id: user.id,
+          nom: user.nom,
+          email: user.email,
+          adresse: user.adresse,
+        }
       });
     }
 

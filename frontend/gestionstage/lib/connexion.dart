@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gestionstage/Acceuil.dart';
 import 'package:gestionstage/inscription.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -16,55 +17,65 @@ class _ConnexionPageState extends State<ConnexionPage> {
   bool isLoading = false;
   bool hidePassword = true;
 
-  Future<void> loginUser() async {
-    final email = emailController.text.trim();
-    final motDePasse = mdpController.text.trim();
+ Future<void> loginUser() async {
+  final email = emailController.text.trim();
+  final motDePasse = mdpController.text.trim();
 
-    if (email.isEmpty || motDePasse.isEmpty) {
+  if (email.isEmpty || motDePasse.isEmpty) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("Veuillez remplir tous les champs")),
+    );
+    return;
+  }
+
+  setState(() => isLoading = true);
+
+  try {
+    final url = Uri.parse("http://localhost:3000/connexion");
+
+    final response = await http.post(
+      url,
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode({
+        "email": email,
+        "mot_de_passe": motDePasse,
+      }),
+    );
+
+    final data = jsonDecode(response.body);
+
+    if (response.statusCode == 200) {
+      String role = data["role"]; // ⚡ récupérer le rôle depuis le serveur
+
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Veuillez remplir tous les champs")),
-      );
-      return;
-    }
-
-    setState(() => isLoading = true);
-
-    try {
-      final url = Uri.parse("http://10.0.2.2:3000/connexion");
-
-      final response = await http.post(
-        url,
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode({
-          "email": email,
-          "mot_de_passe": motDePasse,
-        }),
+        SnackBar(content: Text("Connexion réussie")),
       );
 
-      final data = jsonDecode(response.body);
-
-      if (response.statusCode == 200) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Connexion réussie")),
-        );
-
+      if (role == "etudiant") {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => MyApp()),
+          MaterialPageRoute(builder: (context) => AccueilPage()),
         );
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(data["error"] ?? "Erreur de connexion")),
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen()),
         );
       }
-    } catch (e) {
+
+    } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Erreur réseau : $e")),
+        SnackBar(content: Text(data["error"] ?? "Erreur de connexion")),
       );
     }
-
-    setState(() => isLoading = false);
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("Erreur réseau : $e")),
+    );
   }
+
+  setState(() => isLoading = false);
+}
 
   @override
   Widget build(BuildContext context) {
