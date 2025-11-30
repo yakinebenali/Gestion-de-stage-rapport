@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously, avoid_print, library_private_types_in_public_api, depend_on_referenced_packages, file_names
+
 import 'package:flutter/material.dart';
 import 'package:gestionstage/ajoutOffre.dart';
 import 'package:gestionstage/consultOffre.dart';
@@ -71,7 +73,7 @@ Future<void> _loadEntrepriseId() async {
       ),
       body: entrepriseId == null
           ? const Center(child: CircularProgressIndicator()) // affichage pendant chargement
-          : Container(
+          : SizedBox(
               width: double.infinity,
               height: double.infinity,
               child: Center(

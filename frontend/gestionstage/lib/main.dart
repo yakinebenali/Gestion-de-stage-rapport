@@ -15,12 +15,7 @@ void main() async {
   final prefs = await SharedPreferences.getInstance();
 final email = prefs.getString('email');
 final role = prefs.getString('role');
-final id = prefs.getString('entreprise_id') ?? prefs.getString('etudiant_id');
 
-print("🔹 Vérification connexion:");
-print("Email: $email");
-print("Role: $role");
-print("ID: $id");
 
   runApp(MyApp(
     isLoggedIn: email != null && role != null,
