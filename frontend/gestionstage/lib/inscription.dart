@@ -33,7 +33,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
   Future<void> inscrire() async {
     setState(() => isLoading = true);
 
-    final url = Uri.parse("http://10.0.2.2:3000/inscription"); // Pour émulateur Android
+    final url = Uri.parse("http://localhost:3000/inscription"); // Pour émulateur Android
 
     Map<String, dynamic> data = {
       "role": role,
