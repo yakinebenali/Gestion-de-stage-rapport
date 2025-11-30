@@ -4,9 +4,11 @@ CREATE TABLE Rapport (
     company VARCHAR(255) NOT NULL,
     start_date DATE,
     end_date DATE,
-    description TEXT
+    description TEXT,
+    pdf_path VARCHAR(255),
+    filiere VARCHAR(255) NOT NULL
 );
-ALTER TABLE Rapport ADD COLUMN pdf_path VARCHAR(255);
+
 
 CREATE TABLE entreprises (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -27,4 +29,24 @@ CREATE TABLE offres (
   date_publication TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   entreprise_id INT NOT NULL,
   FOREIGN KEY (entreprise_id) REFERENCES entreprises(id) ON DELETE CASCADE
+);
+
+
+CREATE TABLE Candidature (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    student_name VARCHAR(255) NOT NULL,
+    offer_id VARCHAR(255) NOT NULL,
+    message TEXT,
+    cv_path VARCHAR(255)
+);
+CREATE TABLE etudiants (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nom VARCHAR(100) NOT NULL,
+  prenom VARCHAR(100),
+  email VARCHAR(100) UNIQUE NOT NULL,
+  mot_de_passe VARCHAR(255) NOT NULL,
+  niveau VARCHAR(100),
+  specialite VARCHAR(100),
+  telephone VARCHAR(20),
+  date_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

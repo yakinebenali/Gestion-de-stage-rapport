@@ -3,22 +3,34 @@ const connection = require('./../BD/db'); // Importe la connexion MySQL
 
 // Fonction pour ajouter une offre
 const AjoutOffre = (req, res) => {
-    const { titre, description, duree, competences, entreprise_id } = req.body;
+    const entreprise_id = req.query.entreprise_id;   // récupération automatique
+    const { titre, description, duree, competences } = req.body;
 
-    // Validation des champs obligatoires
     if (!titre || !description || !entreprise_id) {
-        return res.status(400).json({ error: 'Le titre, la description et l\'ID de l\'entreprise sont requis' });
+        return res.status(400).json({ error: "titre, description et entreprise_id requis" });
     }
 
-    const query = 'INSERT INTO offres (titre, description, duree, competences, entreprise_id) VALUES (?, ?, ?, ?, ?)';
+    const query = `
+        INSERT INTO offres (titre, description, duree, competences, entreprise_id)
+        VALUES (?, ?, ?, ?, ?)
+    `;
+
     connection.query(query, [titre, description, duree, competences, entreprise_id], (err, result) => {
         if (err) {
-            console.error('Erreur lors de l\'ajout de l\'offre:', err);
-            return res.status(500).json({ error: 'Erreur serveur lors de l\'ajout de l\'offre' });
+            console.error("Erreur ajout offre:", err);
+            return res.status(500).json({ error: "Erreur serveur" });
         }
+
         res.status(201).json({
-            message: 'Offre ajoutée avec succès',
-            offre: { id: result.insertId, titre, description, duree, competences, entreprise_id }
+            message: "Offre ajoutée avec succès",
+            offre: {
+                id: result.insertId,
+                titre,
+                description,
+                duree,
+                competences,
+                entreprise_id
+            }
         });
     });
 };

@@ -6,9 +6,11 @@ const multer = require('multer');
 const path = require('path');
 const app = express();
 const port = 3000;
-const { AjoutRapport, getAllRapports } = require('./controllers/RapportController');
+const { AjoutRapport, getAllRapports ,deleteRapport, updateRapport} = require('./controllers/RapportController');
 const{ AjoutOffre,getAllOffres } = require('./controllers/OffreController');
-const { AjoutEntreprise } = require('./controllers/EntrepriseController');
+const { Postuler, getAllCandidatures } = require('./controllers/PostulerController');
+const { inscription } = require('./controllers/InscripitionController');
+const{ Connexion } = require('./controllers/ConnexionController');
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -47,14 +49,19 @@ app.use((err, req, res, next) => {
     next();
 });
 
+
 // Routes
 app.post('/AjoutRapport', upload.single('pdf'), AjoutRapport);
+app.delete('/rapports/:id', deleteRapport);
+app.put('/rapports/:id', upload.single('pdf'), updateRapport);
 app.get('/Rapports', getAllRapports);    // New endpoint for fetching reports
 app.use('/uploads', express.static('Uploads'));
 app.post('/ajouteroffre', AjoutOffre);
-app.post('/AjoutEntreprise',AjoutEntreprise);
 app.get('/getAllOffres',getAllOffres);
-
+app.post('/Postuler', upload.single('pdf'), Postuler);
+app.get('/Candidatures', getAllCandidatures);
+app.post('/inscription', inscription);
+app.post('/connexion', Connexion);
 http.createServer(app).listen(port, '0.0.0.0', () => {
     console.log(`Serveur HTTP démarré sur le port ${port}`);
 });
