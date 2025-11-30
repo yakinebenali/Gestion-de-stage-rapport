@@ -1,4 +1,4 @@
-// ignore_for_file: depend_on_referenced_packages, library_private_types_in_public_api
+// ignore_for_file: depend_on_referenced_packages, use_build_context_synchronously, library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
 import 'package:gestionstage/Acceuil.dart';
@@ -6,7 +6,6 @@ import 'package:gestionstage/acceuilEntreprise.dart';
 import 'package:gestionstage/inscription.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ConnexionPage extends StatefulWidget {
@@ -23,12 +22,45 @@ class _ConnexionPageState extends State<ConnexionPage> {
   bool isLoading = false;
   bool hidePassword = true;
 
+  @override
+  void initState() {
+    super.initState();
+    _checkIfAlreadyLoggedIn();
+  }
+
+  // 🔹 Vérifier si utilisateur déjà connecté
+  Future<void> _checkIfAlreadyLoggedIn() async {
+    final prefs = await SharedPreferences.getInstance();
+    final role = prefs.getString('role');
+    if (role != null) {
+      if (role == 'etudiant') {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const AccueilPage()),
+        );
+      } else if (role == 'entreprise') {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const AccueilEntreprisePage()),
+        );
+      }
+    }
+  }
+
   // 🔹 Sauvegarde infos de connexion
   Future<void> saveLoginInfo(String email, String role, String id) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('email', email);
     await prefs.setString('role', role);
-    await prefs.setString('id', id);
+    if (role == 'entreprise') {
+      await prefs.setString('entreprise_id', id);
+    } else if (role == 'etudiant') {
+      await prefs.setString('etudiant_id', id);
+    }
+    print("🔹 Connexion réussie");
+    print("Email: $email");
+    print("Role: $role");
+    print("ID: $id");
   }
 
   // 🔹 Fonction connexion
@@ -58,7 +90,7 @@ class _ConnexionPageState extends State<ConnexionPage> {
 
       if (response.statusCode == 200) {
         String role = data["role"];
-        String id = data["id"].toString();
+        String id = data["user"]["id"].toString();
 
         // 🔹 Sauvegarde des infos
         await saveLoginInfo(email, role, id);
@@ -75,12 +107,12 @@ class _ConnexionPageState extends State<ConnexionPage> {
           if (role == "etudiant") {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const AccueilPage()),
+              MaterialPageRoute(builder: (_) => const AccueilPage()),
             );
-          } else {
+          } else if (role == "entreprise") {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const AccueilEntreprisePage()),
+              MaterialPageRoute(builder: (_) => const AccueilEntreprisePage()),
             );
           }
         }
@@ -170,9 +202,7 @@ class _ConnexionPageState extends State<ConnexionPage> {
                       prefixIcon: const Icon(Icons.lock_outline),
                       suffixIcon: IconButton(
                         icon: Icon(
-                          hidePassword
-                              ? Icons.visibility_off
-                              : Icons.visibility,
+                          hidePassword ? Icons.visibility_off : Icons.visibility,
                         ),
                         onPressed: () {
                           setState(() => hidePassword = !hidePassword);
@@ -199,8 +229,7 @@ class _ConnexionPageState extends State<ConnexionPage> {
                           ),
                           child: const Text(
                             "Se connecter",
-                            style: TextStyle(
-                                fontSize: 18, color: Colors.white),
+                            style: TextStyle(fontSize: 18, color: Colors.white),
                           ),
                         ),
                   const SizedBox(height: 15),

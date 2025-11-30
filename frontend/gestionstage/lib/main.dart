@@ -5,7 +5,7 @@ import 'package:gestionstage/acceuilEntreprise.dart';
 import 'package:gestionstage/connexion.dart';
 import 'package:gestionstage/inscription.dart';
 import 'package:gestionstage/Acceuil.dart'; // Accueil étudiant
-import 'package:gestionstage/acceuilEntreprise.dart'; // Accueil entreprise
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
@@ -13,8 +13,14 @@ void main() async {
 
   // 🔹 Vérifier si l'utilisateur est déjà connecté
   final prefs = await SharedPreferences.getInstance();
-  final email = prefs.getString('email');
-  final role = prefs.getString('role');
+final email = prefs.getString('email');
+final role = prefs.getString('role');
+final id = prefs.getString('entreprise_id') ?? prefs.getString('etudiant_id');
+
+print("🔹 Vérification connexion:");
+print("Email: $email");
+print("Role: $role");
+print("ID: $id");
 
   runApp(MyApp(
     isLoggedIn: email != null && role != null,
