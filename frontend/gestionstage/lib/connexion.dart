@@ -1,11 +1,13 @@
-// ignore_for_file: use_build_context_synchronously, depend_on_referenced_packages, library_private_types_in_public_api
+// ignore_for_file: depend_on_referenced_packages, library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
 import 'package:gestionstage/Acceuil.dart';
+import 'package:gestionstage/acceuilEntreprise.dart';
 import 'package:gestionstage/inscription.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:gestionstage/main.dart';
+
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ConnexionPage extends StatefulWidget {
   const ConnexionPage({super.key});
@@ -21,65 +23,84 @@ class _ConnexionPageState extends State<ConnexionPage> {
   bool isLoading = false;
   bool hidePassword = true;
 
- Future<void> loginUser() async {
-  final email = emailController.text.trim();
-  final motDePasse = mdpController.text.trim();
-
-  if (email.isEmpty || motDePasse.isEmpty) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("Veuillez remplir tous les champs")),
-    );
-    return;
+  // 🔹 Sauvegarde infos de connexion
+  Future<void> saveLoginInfo(String email, String role, String id) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('email', email);
+    await prefs.setString('role', role);
+    await prefs.setString('id', id);
   }
 
-  setState(() => isLoading = true);
+  // 🔹 Fonction connexion
+  Future<void> loginUser() async {
+    final email = emailController.text.trim();
+    final motDePasse = mdpController.text.trim();
 
-  try {
-    final url = Uri.parse("http://localhost:3000/connexion");
-
-    final response = await http.post(
-      url,
-      headers: {"Content-Type": "application/json"},
-      body: jsonEncode({
-        "email": email,
-        "mot_de_passe": motDePasse,
-      }),
-    );
-
-    final data = jsonDecode(response.body);
-
-    if (response.statusCode == 200) {
-      String role = data["role"]; // ⚡ récupérer le rôle depuis le serveur
-
+    if (email.isEmpty || motDePasse.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Connexion réussie")),
+        const SnackBar(content: Text("Veuillez remplir tous les champs")),
+      );
+      return;
+    }
+
+    setState(() => isLoading = true);
+
+    try {
+      final url = Uri.parse("http://localhost:3000/connexion");
+
+      final response = await http.post(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({"email": email, "mot_de_passe": motDePasse}),
       );
 
-      if (role == "etudiant") {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => AccueilPage()),
-        );
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        String role = data["role"];
+        String id = data["id"].toString();
+
+        // 🔹 Sauvegarde des infos
+        await saveLoginInfo(email, role, id);
+
+        // 🔹 Affichage message succès
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Connexion réussie")),
+          );
+        }
+
+        // 🔹 Navigation selon rôle
+        if (mounted) {
+          if (role == "etudiant") {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const AccueilPage()),
+            );
+          } else {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const AccueilEntreprisePage()),
+            );
+          }
+        }
       } else {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => HomeScreen()),
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(data["error"] ?? "Erreur de connexion")),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Erreur réseau : $e")),
         );
       }
-
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(data["error"] ?? "Erreur de connexion")),
-      );
+    } finally {
+      if (mounted) setState(() => isLoading = false);
     }
-  } catch (e) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("Erreur réseau : $e")),
-    );
   }
-
-  setState(() => isLoading = false);
-}
 
   @override
   Widget build(BuildContext context) {
@@ -91,21 +112,18 @@ class _ConnexionPageState extends State<ConnexionPage> {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              Colors.blue.shade800,
-              Colors.blue.shade400,
-            ],
+            colors: [Colors.blue.shade800, Colors.blue.shade400],
           ),
         ),
         child: Center(
           child: SingleChildScrollView(
             child: Container(
-              padding: EdgeInsets.all(25),
-              margin: EdgeInsets.symmetric(horizontal: 25),
+              padding: const EdgeInsets.all(25),
+              margin: const EdgeInsets.symmetric(horizontal: 25),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(25),
-                boxShadow: [
+                boxShadow: const [
                   BoxShadow(
                     color: Colors.black26,
                     blurRadius: 12,
@@ -116,9 +134,12 @@ class _ConnexionPageState extends State<ConnexionPage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.lock_outline,
-                      size: 70, color: Colors.blue.shade700),
-                  SizedBox(height: 15),
+                  Icon(
+                    Icons.lock_outline,
+                    size: 70,
+                    color: Colors.blue.shade700,
+                  ),
+                  const SizedBox(height: 15),
                   Text(
                     "Connexion",
                     style: TextStyle(
@@ -127,28 +148,26 @@ class _ConnexionPageState extends State<ConnexionPage> {
                       color: Colors.blue.shade700,
                     ),
                   ),
-                  SizedBox(height: 30),
-
+                  const SizedBox(height: 30),
                   // Champ email
                   TextField(
                     controller: emailController,
                     decoration: InputDecoration(
                       labelText: "Email",
-                      prefixIcon: Icon(Icons.email_outlined),
+                      prefixIcon: const Icon(Icons.email_outlined),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15),
                       ),
                     ),
                   ),
-                  SizedBox(height: 20),
-
+                  const SizedBox(height: 20),
                   // Champ mot de passe
                   TextField(
                     controller: mdpController,
                     obscureText: hidePassword,
                     decoration: InputDecoration(
                       labelText: "Mot de passe",
-                      prefixIcon: Icon(Icons.lock_outline),
+                      prefixIcon: const Icon(Icons.lock_outline),
                       suffixIcon: IconButton(
                         icon: Icon(
                           hidePassword
@@ -164,39 +183,36 @@ class _ConnexionPageState extends State<ConnexionPage> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 30),
-
+                  const SizedBox(height: 30),
                   // Bouton connexion
                   isLoading
-                      ? CircularProgressIndicator()
+                      ? const CircularProgressIndicator()
                       : ElevatedButton(
                           onPressed: loginUser,
                           style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                                 horizontal: 50, vertical: 16),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15),
                             ),
                             backgroundColor: Colors.blue.shade700,
                           ),
-                          child: Text(
+                          child: const Text(
                             "Se connecter",
                             style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.white,
-                            ),
+                                fontSize: 18, color: Colors.white),
                           ),
                         ),
-
-                  SizedBox(height: 15),
-
+                  const SizedBox(height: 15),
                   GestureDetector(
-                     onTap: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => InscriptionPage()),
-    );
-  },
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const InscriptionPage(),
+                        ),
+                      );
+                    },
                     child: Text(
                       "Créer un compte",
                       style: TextStyle(
