@@ -1,9 +1,13 @@
+// ignore_for_file: depend_on_referenced_packages, library_private_types_in_public_api, file_names, deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'postuler.dart';
 
 class OffresPage extends StatefulWidget {
+  const OffresPage({super.key});
+
   @override
   _OffresPageState createState() => _OffresPageState();
 }

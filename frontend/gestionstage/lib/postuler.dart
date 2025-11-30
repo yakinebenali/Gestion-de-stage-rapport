@@ -1,4 +1,5 @@
-import 'dart:typed_data';
+// ignore_for_file: use_build_context_synchronously, library_private_types_in_public_api, depend_on_referenced_packages
+
 import 'dart:io' show File; // ignore on web
 import 'package:flutter/foundation.dart'; // kIsWeb
 import 'package:flutter/material.dart';
@@ -8,7 +9,7 @@ import 'package:file_picker/file_picker.dart';
 
 class PostulerPage extends StatefulWidget {
   final int offreId;
-  PostulerPage({required this.offreId});
+  const PostulerPage({super.key, required this.offreId});
 
   @override
   _PostulerPageState createState() => _PostulerPageState();
@@ -145,8 +146,8 @@ class _PostulerPageState extends State<PostulerPage> {
 
               ElevatedButton(
                 onPressed: submitCandidature,
-                child: Text("Envoyer Candidature"),
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                child: Text("Envoyer Candidature"),
               ),
             ],
           ),

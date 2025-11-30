@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 import 'ajoutRaport.dart';
 import 'consultRapport.dart';
@@ -22,8 +24,8 @@ class GestionRapportPage extends StatelessWidget {
           );
         },
         backgroundColor: Colors.blue.shade700,
-        child: Icon(Icons.add),
         tooltip: "Ajouter un rapport",
+        child: Icon(Icons.add),
       ),
     );
   }

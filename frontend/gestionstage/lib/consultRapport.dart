@@ -1,5 +1,8 @@
-import 'package:flutter/foundation.dart' show kIsWeb;
+
+// ignore_for_file: depend_on_referenced_packages, library_private_types_in_public_api, file_names, use_build_context_synchronously
+
 import 'package:flutter/material.dart';
+import 'package:gestionstage/modify_rapport.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart';
@@ -57,6 +60,16 @@ class _ConsultRapportScreenState extends State<ConsultRapportScreen> {
       );
     }
   }
+String _formatDate(String dateTimeStr) {
+  try {
+    DateTime dt = DateTime.parse(dateTimeStr);
+    return "${dt.year.toString().padLeft(4,'0')}-"
+           "${dt.month.toString().padLeft(2,'0')}-"
+           "${dt.day.toString().padLeft(2,'0')}";
+  } catch (e) {
+    return dateTimeStr; // retourne tel quel si parsing échoue
+  }
+}
 
   // Fonction pour supprimer un rapport avec confirmation
   Future<void> _deleteRapport(int id) async {
@@ -135,32 +148,52 @@ class _ConsultRapportScreenState extends State<ConsultRapportScreen> {
                               rapport['title'] ?? 'Sans titre',
                               style: const TextStyle(fontWeight: FontWeight.bold),
                             ),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Entreprise: ${rapport['company'] ?? 'N/A'}'),
-                                if (rapport['start_date'] != null)
-                                  Text('Début: ${rapport['start_date']}'),
-                                if (rapport['end_date'] != null)
-                                  Text('Fin: ${rapport['end_date']}'),
-                                if (rapport['description'] != null)
-                                  Text('Description: ${rapport['description']}'),
-                              ],
-                            ),
-                            trailing: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                if (rapport['pdf_path'] != null)
-                                  IconButton(
-                                    icon: const Icon(Icons.picture_as_pdf),
-                                    onPressed: () => _openPdf(rapport['pdf_path']),
-                                  ),
-                                IconButton(
-                                  icon: const Icon(Icons.delete, color: Colors.red),
-                                  onPressed: () => _deleteRapport(rapport['id']),
-                                ),
-                              ],
-                            ),
+                           subtitle: Column(
+  crossAxisAlignment: CrossAxisAlignment.start,
+  children: [
+    Text('Entreprise: ${rapport['company'] ?? 'N/A'}'),
+    if (rapport['start_date'] != null)
+      Text('Début: ${_formatDate(rapport['start_date'])}'),
+    if (rapport['end_date'] != null)
+      Text('Fin: ${_formatDate(rapport['end_date'])}'),
+    if (rapport['description'] != null)
+      Text('Description: ${rapport['description']}'),
+  ],
+),
+
+                        trailing: Row(
+  mainAxisSize: MainAxisSize.min,
+  children: [
+    if (rapport['pdf_path'] != null)
+      IconButton(
+        icon: const Icon(Icons.picture_as_pdf),
+        onPressed: () => _openPdf(rapport['pdf_path']),
+      ),
+
+    // 🔹 Bouton Modifier
+    IconButton(
+      icon: const Icon(Icons.edit, color: Colors.orange),
+      onPressed: () async {
+        final updated = await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ModifyRapportScreen(rapport: rapport),
+          ),
+        );
+        if (updated == true) {
+          _fetchRapports(); // refresh après modif
+        }
+      },
+    ),
+
+    // 🔹 Bouton Supprimer (déjà ajouté)
+    IconButton(
+      icon: const Icon(Icons.delete, color: Colors.red),
+      onPressed: () => _deleteRapport(rapport['id']),
+    ),
+  ],
+),
+
                           ),
                         );
                       },

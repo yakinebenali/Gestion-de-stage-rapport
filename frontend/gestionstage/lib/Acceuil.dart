@@ -1,6 +1,9 @@
+// ignore: duplicate_ignore
+// ignore: file_names
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 import 'package:gestionstage/gestionRapport.dart';
-import 'ajoutRaport.dart'; // importe la page cible
 
 class AccueilPage extends StatelessWidget {
   const AccueilPage({super.key});

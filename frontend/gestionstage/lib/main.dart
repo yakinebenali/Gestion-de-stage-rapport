@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gestionstage/ajoutRaport.dart';
 import 'package:gestionstage/connexion.dart';
-import 'package:gestionstage/consultRapport.dart';
 import 'package:gestionstage/ajoutOffre.dart';
 import 'package:gestionstage/consult_candidature.dart';
 import 'package:gestionstage/consultOffre.dart';

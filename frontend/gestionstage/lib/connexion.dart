@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously, depend_on_referenced_packages, library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import 'package:gestionstage/Acceuil.dart';
 import 'package:gestionstage/inscription.dart';
@@ -6,6 +8,8 @@ import 'dart:convert';
 import 'package:gestionstage/main.dart';
 
 class ConnexionPage extends StatefulWidget {
+  const ConnexionPage({super.key});
+
   @override
   _ConnexionPageState createState() => _ConnexionPageState();
 }

@@ -74,5 +74,45 @@ const deleteRapport = async (req, res) => {
     res.status(500).json({ error: "Erreur serveur" });
   }
 };
+// updateRapport
+const updateRapport = async (req, res) => {
+    const id = req.params.id;
+    const { title, company, start_date, end_date, description, filiere } = req.body;
 
-module.exports = { AjoutRapport, getAllRapports,deleteRapport };
+    try {
+        // 📌 Récupérer l'ancien rapport (table Rapport)
+        const [oldData] = await connection.query(
+            "SELECT pdf_path FROM Rapport WHERE id = ?",
+            [id]
+        );
+
+        if (oldData.length === 0) {
+            return res.status(404).json({ error: "Rapport introuvable" });
+        }
+
+        let pdfPath = oldData[0].pdf_path;
+
+        // 📌 Si un fichier PDF est envoyé → remplacer
+        if (req.file) {
+            pdfPath = "/uploads/" + req.file.filename;
+        }
+
+        // 📌 Mise à jour dans la bonne table : Rapport
+        await connection.query(
+            `UPDATE Rapport 
+             SET title = ?, company = ?, start_date = ?, end_date = ?, description = ?, filiere = ?, pdf_path = ?
+             WHERE id = ?`,
+            [title, company, start_date, end_date, description, filiere, pdfPath, id]
+        );
+
+        res.json({ message: "Rapport mis à jour avec succès" });
+
+    } catch (err) {
+        console.error("Erreur update :", err);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+};
+
+
+
+module.exports = { AjoutRapport, getAllRapports, deleteRapport, updateRapport };
