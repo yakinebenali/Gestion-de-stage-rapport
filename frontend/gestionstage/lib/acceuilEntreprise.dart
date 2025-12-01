@@ -1,7 +1,6 @@
 // ignore_for_file: use_build_context_synchronously, avoid_print, library_private_types_in_public_api, depend_on_referenced_packages, file_names
 
 import 'package:flutter/material.dart';
-import 'package:gestionstage/ajoutOffre.dart';
 import 'package:gestionstage/consultOffre.dart';
 import 'package:gestionstage/consult_candidature.dart';
 import 'package:gestionstage/main.dart';
@@ -91,14 +90,8 @@ Future<void> _loadEntrepriseId() async {
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 40),
-                      buildButton(context, "Consulter Offres", Icons.business_center, OffresPage()),
-                      const SizedBox(height: 20),
-                      buildButton(
-                        context,
-                        "Ajouter Offre",
-                        Icons.add_business,
-                        AjouterOffrePage(entrepriseId: entrepriseId!),
-                      ),
+                      buildButton(context, "Gestion Offres", Icons.business_center, OffresPage()),
+                      
                       const SizedBox(height: 20),
                       buildButton(
                         context,

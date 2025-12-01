@@ -176,7 +176,7 @@ String _formatDate(String dateTimeStr) {
       onPressed: () async {
         final updated = await Navigator.push(
           context,
-          MaterialPageRoute(
+          MaterialPageRoute( 
             builder: (context) => ModifyRapportScreen(rapport: rapport),
           ),
         );

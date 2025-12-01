@@ -6,13 +6,15 @@ const multer = require('multer');
 const path = require('path');
 const app = express();
 const port = 3000;
+const bodyParser = require('body-parser');
 const { AjoutRapport, getAllRapports ,deleteRapport, updateRapport} = require('./controllers/RapportController');
-const{ AjoutOffre,getAllOffres } = require('./controllers/OffreController');
+const{ AjoutOffre,getAllOffres, ModifierOffre,SupprimerOffre } = require('./controllers/OffreController');
 const { Postuler, getAllCandidatures } = require('./controllers/PostulerController');
 const { inscription } = require('./controllers/InscripitionController');
 const{ Connexion } = require('./controllers/ConnexionController');
 app.use(cors());
 app.use(express.json());
+app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Configuration de multer pour stocker les fichiers PDF
@@ -62,6 +64,8 @@ app.post('/Postuler', upload.single('pdf'), Postuler);
 app.get('/Candidatures', getAllCandidatures);
 app.post('/inscription', inscription);
 app.post('/connexion', Connexion);
+app.put('/ModifierOffre/:id', ModifierOffre);
+app.delete('/SupprimerOffre/:id', SupprimerOffre);
 http.createServer(app).listen(port, '0.0.0.0', () => {
     console.log(`Serveur HTTP démarré sur le port ${port}`);
 });
