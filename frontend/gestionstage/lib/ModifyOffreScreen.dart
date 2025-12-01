@@ -146,8 +146,8 @@ class _ModifyOffreScreenState extends State<ModifyOffreScreen> {
               decoration: const InputDecoration(labelText: 'Durée (en mois/jours)', border: OutlineInputBorder()),
               keyboardType: TextInputType.text,
             ),
-            const SizedBox(heigh
-            TextField(
+            const SizedBox(height: 12),
+              TextField(
               controller: competencesController,
               decoration: const InputDecoration(labelText: 'Compétences (séparées par des virgules)', border: OutlineInputBorder()),
             ),
