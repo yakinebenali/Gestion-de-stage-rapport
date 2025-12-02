@@ -33,6 +33,7 @@ const Postuler = (req, res) => {
     });
 };
 
+// GET : Récupérer toutes les candidatures
 const getAllCandidatures = async (req, res) => {
   try {
     const [results] = await connection.query(`
@@ -47,5 +48,28 @@ const getAllCandidatures = async (req, res) => {
   }
 };
 
+// PUT : Mettre à jour le statut d'une candidature
+const updateCandidatureStatus = (req, res) => {
+    const id = req.params.id;
+    const { status } = req.body;
 
-module.exports = { Postuler, getAllCandidatures };
+    if (!status || !['accepter', 'refuser'].includes(status)) {
+        return res.status(400).json({ error: 'Statut invalide' });
+    }
+
+    const query = `UPDATE Candidature SET status = ? WHERE id = ?`;
+    connection.query(query, [status, id], (err, result) => {
+        if (err) {
+            console.error('Erreur DB:', err);
+            return res.status(500).json({ error: 'Erreur DB' });
+        }
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: 'Candidature non trouvée' });
+        }
+
+        res.json({ message: `Candidature ${status}` });
+    });
+};
+
+module.exports = { Postuler, getAllCandidatures, updateCandidatureStatus };
