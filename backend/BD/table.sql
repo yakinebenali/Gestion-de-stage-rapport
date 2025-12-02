@@ -31,14 +31,19 @@ CREATE TABLE offres (
   FOREIGN KEY (entreprise_id) REFERENCES entreprises(id) ON DELETE CASCADE
 );
 
-
 CREATE TABLE Candidature (
     id INT AUTO_INCREMENT PRIMARY KEY,
     student_name VARCHAR(255) NOT NULL,
     offer_id VARCHAR(255) NOT NULL,
     message TEXT,
-    cv_path VARCHAR(255)
+    cv_path VARCHAR(255),
+    entreprise_id INT NOT NULL,  
+    status VARCHAR(50) DEFAULT 'en attente',  
+    FOREIGN KEY (entreprise_id) REFERENCES entreprises(id)
 );
+
+
+
 CREATE TABLE etudiants (
   id INT AUTO_INCREMENT PRIMARY KEY,
   nom VARCHAR(100) NOT NULL,

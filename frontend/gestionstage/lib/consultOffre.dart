@@ -1,4 +1,4 @@
-// ignore_for_file: depend_on_referenced_packages, library_private_types_in_public_api, file_names, deprecated_member_use
+// ignore_for_file: depend_on_referenced_packages, library_private_types_in_public_api, file_names, deprecated_member_use, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -31,7 +31,11 @@ class _OffresPageState extends State<OffresPage> {
   }
 
   Future<void> fetchOffres() async {
-    final url = Uri.parse('http://localhost:3000/getAllOffres');
+    
+    final prefs = await SharedPreferences.getInstance();
+final entrepriseId = prefs.getString("entreprise_id");
+
+final url = Uri.parse("http://localhost:3000/getAllOffres?entreprise_id=$entrepriseId");
     try {
       final response = await http.get(url);
 
@@ -87,9 +91,7 @@ class _OffresPageState extends State<OffresPage> {
       setState(() {
         entrepriseId = int.tryParse(id);
       });
-      print("✅ ID de l'entreprise récupéré: $entrepriseId");
     } else {
-      print("⚠️ Aucun ID entreprise trouvé dans SharedPreferences");
     }
   }
 
@@ -259,11 +261,9 @@ class _OffresPageState extends State<OffresPage> {
 
 Future<void> _deleteOffre(int id) async {
   final url = Uri.parse('http://localhost:3000/SupprimerOffre/$id');
-  print('Deleting offer $id -> $url');
 
   try {
     final response = await http.delete(url);
-    print('Response: ${response.statusCode} ${response.body}');
 
     if (response.statusCode == 200 || response.statusCode == 204) {
       setState(() {
@@ -281,7 +281,6 @@ Future<void> _deleteOffre(int id) async {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(errorMsg)));
     }
   } catch (e) {
-    print('Network error: $e');
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text('Erreur réseau: $e')));
   }
